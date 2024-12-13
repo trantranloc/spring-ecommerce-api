@@ -1,2 +1,4 @@
-package com.spring.springecommerceapi.model;public class Customer {
+package com.spring.springecommerceapi.model;
+
+public class Customer {
 }
