@@ -23,9 +23,7 @@ public class SecurityConfig {
                 .formLogin(
                         form -> form
                                 .loginPage("/login").permitAll()
-                                .successHandler((request, response, authentication) -> {
-                                    response.sendRedirect("/api/v1");
-                                })
+                                .successHandler((request, response, authentication) -> response.sendRedirect("/api/v1"))
                 )
                 .logout(LogoutConfigurer::permitAll);
 
