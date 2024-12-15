@@ -38,12 +38,9 @@ public class ProductController extends BaseController {
     }
     @PostMapping
     public ResponseEntity<ApiRequest<Product>> addProduct(@RequestBody Product product) {
-        // Kiểm tra xem categoriesIds có null không
         if (product.getCategoriesIds() == null || product.getCategoriesIds().isEmpty()) {
             throw new AppException(ErrorCode.INVALID_CATEGORY);
         }
-
-        // Kiểm tra và ánh xạ categoryId thành các đối tượng Category thực tế
         Set<Category> categories = new HashSet<>();
 
         for (String categoryId : product.getCategoriesIds()) {
@@ -54,14 +51,8 @@ public class ProductController extends BaseController {
             }
             categories.add(category);
         }
-
-        // Gán các category đã tìm được vào product
         product.setCategories(categories);
-
-        // Lưu product vào cơ sở dữ liệu
         Product savedProduct = productService.saveProduct(product);
-
-        // Trả về phản hồi với product đã lưu
         return createApiResponse(ErrorCode.CREATE_SUCCESS, savedProduct);
     }
 

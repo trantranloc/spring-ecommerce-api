@@ -7,6 +7,8 @@ public enum ErrorCode {
     DELETE_SUCCESS(200, "Delete Success"),
     UPDATE_SUCCESS(200, "Update Success"),
 
+    USER_NOT_FOUND(400, "User Not Found"),
+
     PRODUCT_NOT_FOUND(404, "Product Not Found"),
     PRODUCT_ALREADY_EXISTS(409, "Product Already Exists"),
     PRODUCT_ALREADY_DELETED(409, "Product Already Deleted"),
