@@ -14,6 +14,7 @@ public class User {
     private String lastName;
     private String image;
     private String email;
+    private String username;
     private String password;
     private String phone;
     private String address;
@@ -104,6 +105,14 @@ public class User {
 
     public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Set<Role> getRoles() {

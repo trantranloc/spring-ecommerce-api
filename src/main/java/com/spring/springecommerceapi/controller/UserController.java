@@ -2,7 +2,7 @@ package com.spring.springecommerceapi.controller;
 
 import com.spring.springecommerceapi.exception.ErrorCode;
 import com.spring.springecommerceapi.model.User;
-import com.spring.springecommerceapi.request.ApiRequest;
+import com.spring.springecommerceapi.dto.request.ApiRequest;
 import com.spring.springecommerceapi.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

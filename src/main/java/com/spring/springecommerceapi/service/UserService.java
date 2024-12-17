@@ -6,6 +6,8 @@ import com.spring.springecommerceapi.model.Role;
 import com.spring.springecommerceapi.model.User;
 import com.spring.springecommerceapi.repository.RoleRepository;
 import com.spring.springecommerceapi.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -31,6 +33,10 @@ public class UserService {
     }
 
     public User createUser(User user) {
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
             Role role = roleRepository.findByName("ROLE_USER");
             if (role == null) {

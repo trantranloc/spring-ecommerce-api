@@ -4,7 +4,7 @@ import com.spring.springecommerceapi.exception.AppException;
 import com.spring.springecommerceapi.exception.ErrorCode;
 import com.spring.springecommerceapi.model.Category;
 import com.spring.springecommerceapi.model.Product;
-import com.spring.springecommerceapi.request.ApiRequest;
+import com.spring.springecommerceapi.dto.request.ApiRequest;
 import com.spring.springecommerceapi.service.CategoryService;
 import com.spring.springecommerceapi.service.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -60,5 +60,12 @@ public class ProductController extends BaseController {
     public ResponseEntity<ApiRequest<Void>> deleteProductById(@PathVariable String id) {
         productService.deleteProduct(id);
         return createApiResponse(ErrorCode.CREATE_SUCCESS, null);
+    }
+
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiRequest<List<Product>>> getProductsByTitle(@RequestParam("title") String Title) {
+        List<Product> products = productService.getProductByTitle(Title);
+        return createApiResponse(ErrorCode.SUCCESS, products);
     }
 }

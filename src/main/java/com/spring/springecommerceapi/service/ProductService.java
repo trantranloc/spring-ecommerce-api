@@ -39,4 +39,8 @@ public class ProductService {
     public void updateProduct(Product product) {
 
     }
+
+    public List<Product> getProductByTitle(String title){
+        return productRepository.findByTitleContainingIgnoreCase(title);
+    }
 }

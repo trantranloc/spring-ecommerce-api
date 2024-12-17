@@ -3,7 +3,7 @@ package com.spring.springecommerceapi.controller;
 import com.spring.springecommerceapi.exception.AppException;
 import com.spring.springecommerceapi.exception.ErrorCode;
 import com.spring.springecommerceapi.model.Cart;
-import com.spring.springecommerceapi.request.ApiRequest;
+import com.spring.springecommerceapi.dto.request.ApiRequest;
 import com.spring.springecommerceapi.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
