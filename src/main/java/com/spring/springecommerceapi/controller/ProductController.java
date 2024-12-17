@@ -4,7 +4,7 @@ import com.spring.springecommerceapi.exception.AppException;
 import com.spring.springecommerceapi.exception.ErrorCode;
 import com.spring.springecommerceapi.model.Category;
 import com.spring.springecommerceapi.model.Product;
-import com.spring.springecommerceapi.request.ApiRequest;
+import com.spring.springecommerceapi.dto.request.ApiRequest;
 import com.spring.springecommerceapi.service.CategoryService;
 import com.spring.springecommerceapi.service.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -38,12 +38,9 @@ public class ProductController extends BaseController {
     }
     @PostMapping
     public ResponseEntity<ApiRequest<Product>> addProduct(@RequestBody Product product) {
-        // Kiểm tra xem categoriesIds có null không
         if (product.getCategoriesIds() == null || product.getCategoriesIds().isEmpty()) {
             throw new AppException(ErrorCode.INVALID_CATEGORY);
         }
-
-        // Kiểm tra và ánh xạ categoryId thành các đối tượng Category thực tế
         Set<Category> categories = new HashSet<>();
 
         for (String categoryId : product.getCategoriesIds()) {
@@ -54,14 +51,8 @@ public class ProductController extends BaseController {
             }
             categories.add(category);
         }
-
-        // Gán các category đã tìm được vào product
         product.setCategories(categories);
-
-        // Lưu product vào cơ sở dữ liệu
         Product savedProduct = productService.saveProduct(product);
-
-        // Trả về phản hồi với product đã lưu
         return createApiResponse(ErrorCode.CREATE_SUCCESS, savedProduct);
     }
 
@@ -69,5 +60,12 @@ public class ProductController extends BaseController {
     public ResponseEntity<ApiRequest<Void>> deleteProductById(@PathVariable String id) {
         productService.deleteProduct(id);
         return createApiResponse(ErrorCode.CREATE_SUCCESS, null);
+    }
+
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiRequest<List<Product>>> getProductsByTitle(@RequestParam("title") String Title) {
+        List<Product> products = productService.getProductByTitle(Title);
+        return createApiResponse(ErrorCode.SUCCESS, products);
     }
 }

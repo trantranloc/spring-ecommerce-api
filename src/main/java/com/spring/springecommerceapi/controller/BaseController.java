@@ -1,7 +1,7 @@
 package com.spring.springecommerceapi.controller;
 
 import com.spring.springecommerceapi.exception.ErrorCode;
-import com.spring.springecommerceapi.request.ApiRequest;
+import com.spring.springecommerceapi.dto.request.ApiRequest;
 import org.springframework.http.ResponseEntity;
 
 public abstract class BaseController {

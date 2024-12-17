@@ -3,9 +3,13 @@ package com.spring.springecommerceapi.exception;
 public enum ErrorCode {
 
     SUCCESS(200, "Success"),
+    FAIL(400, "Fail"),
+    UNAUTHENTICATED(401, "Unauthenticated"),
     CREATE_SUCCESS(201, "Create Success"),
     DELETE_SUCCESS(200, "Delete Success"),
     UPDATE_SUCCESS(200, "Update Success"),
+
+    USER_NOT_FOUND(400, "User Not Found"),
 
     PRODUCT_NOT_FOUND(404, "Product Not Found"),
     PRODUCT_ALREADY_EXISTS(409, "Product Already Exists"),

@@ -1,4 +1,4 @@
-package com.spring.springecommerceapi.request;
+package com.spring.springecommerceapi.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

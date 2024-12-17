@@ -1,19 +1,21 @@
 package com.spring.springecommerceapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String name;
     @Column(updatable = false)
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
-    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "roles")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "roles")
     private Set<User> users;
 
     public String getId() {
@@ -48,6 +50,7 @@ public class Role {
         this.updateAt = updateAt;
     }
 
+    @JsonIgnore
     public Set<User> getUsers() {
         return users;
     }

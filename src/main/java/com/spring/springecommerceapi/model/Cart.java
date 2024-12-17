@@ -1,24 +1,38 @@
 package com.spring.springecommerceapi.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Entity
-public class Category {
+public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private String name;
+
+    @Column(name = "user_id")
+    private String userId;
+
+    @OneToMany(mappedBy = "cartId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<CartItem> items;
+
     @Column(updatable = false)
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "categories")
-    private Set<Product> products;
+
+    @PrePersist
+    public void prePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        createdAt = now;
+        updateAt = now;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updateAt = LocalDateTime.now();
+    }
 
     public String getId() {
         return id;
@@ -28,12 +42,20 @@ public class Category {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public List<CartItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<CartItem> items) {
+        this.items = items;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -50,25 +72,5 @@ public class Category {
 
     public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
-    }
-    @JsonIgnore
-    public Set<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(Set<Product> products) {
-        this.products = products;
-    }
-
-    @PrePersist
-    public void prePersist() {
-        LocalDateTime now = LocalDateTime.now();
-        createdAt = now;
-        updateAt = now;
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        updateAt = LocalDateTime.now();
     }
 }
