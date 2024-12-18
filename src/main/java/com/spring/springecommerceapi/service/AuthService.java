@@ -30,7 +30,7 @@ public class AuthService {
         this.userRepository = userRepository;
     }
     @NonFinal
-    protected  static final String SIGNER_KEY="n47X3QZLGE+YF2BNbxdNnTwLk5y5G/ByOvPgOL6l59MoRsY2gqYau5ItAfpS2vJk";
+    public   static final String SIGNER_KEY="n47X3QZLGE+YF2BNbxdNnTwLk5y5G/ByOvPgOL6l59MoRsY2gqYau5ItAfpS2vJk";
 
     public AuthResponse authenticate(AuthRequest response) throws KeyLengthException {
         User user = userRepository.findByUsername(response.getUsername())
