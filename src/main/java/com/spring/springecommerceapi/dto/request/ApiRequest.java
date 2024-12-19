@@ -17,15 +17,11 @@ public class ApiRequest<T> {
         this.result = result;
     }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
     public int getCode() {
         return code;
     }
 
-    public void SetCode(int code) {
+    public void setCode(int code) {
         this.code = code;
     }
 

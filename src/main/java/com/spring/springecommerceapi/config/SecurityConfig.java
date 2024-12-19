@@ -20,7 +20,7 @@ import javax.crypto.spec.SecretKeySpec;
 @EnableWebSecurity
 public class SecurityConfig {
     protected static final String SIGNER_KEY = "n47X3QZLGE+YF2BNbxdNnTwLk5y5G/ByOvPgOL6l59MoRsY2gqYau5ItAfpS2vJk";
-    protected String[] PUBLIC = {"/api/v1/auth/**"};
+    protected String[] PUBLIC = {"/api/v1/auth/**","/swagger-ui/**"};
 
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         registry -> registry
                                 .requestMatchers(HttpMethod.POST, PUBLIC).permitAll()
+                                .requestMatchers(HttpMethod.GET, PUBLIC).hasAuthority("SCOPE_ROLE_ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(
