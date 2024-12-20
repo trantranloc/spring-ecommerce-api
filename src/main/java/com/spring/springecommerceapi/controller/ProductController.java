@@ -61,11 +61,34 @@ public class ProductController extends BaseController {
         productService.deleteProduct(id);
         return createApiResponse(ErrorCode.CREATE_SUCCESS, null);
     }
-
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ApiRequest<Void>> updateProduct(@PathVariable String id,@RequestBody Product product) {
+        Product productUpdate = productService.getProductById(id);
+        if (product.getCategoriesIds() == null || product.getCategoriesIds().isEmpty()) {
+            product.setCategoriesIds(productUpdate.getCategoriesIds());
+        }
+        if (product.getImage() != null) {
+            productUpdate.setImage(product.getImage());
+        }
+        if (product.getTitle() != null) {
+            productUpdate.setTitle(product.getTitle());
+        }
+        if (product.getDescription() != null) {
+            productUpdate.setDescription(product.getDescription());
+        }
+        if (product.getPrice() != null) {
+            productUpdate.setPrice(product.getPrice());
+        }
+        if (product.getQuantity() != null) {
+            productUpdate.setQuantity(product.getQuantity());
+        }
+        productService.updateProduct(productUpdate);
+        return createApiResponse(ErrorCode.UPDATE_SUCCESS,null);
+    }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiRequest<List<Product>>> getProductsByTitle(@RequestParam("title") String Title) {
-        List<Product> products = productService.getProductByTitle(Title);
+    public ResponseEntity<ApiRequest<List<Product>>> getProductsByTitle(@RequestParam String title) {
+        List<Product> products = productService.getProductByTitle(title);
         return createApiResponse(ErrorCode.SUCCESS, products);
     }
 }

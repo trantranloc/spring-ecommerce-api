@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         registry -> registry
                                 .requestMatchers(HttpMethod.POST, PUBLIC).permitAll()
+                                .requestMatchers(HttpMethod.PUT, PUBLIC).permitAll()
                                 .requestMatchers(HttpMethod.GET, PUBLIC).hasAuthority("SCOPE_ROLE_ADMIN")
                                 .anyRequest().authenticated()
                 )
