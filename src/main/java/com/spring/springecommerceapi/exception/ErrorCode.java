@@ -10,6 +10,8 @@ public enum ErrorCode {
     UPDATE_SUCCESS(200, "Update Success"),
 
     USER_NOT_FOUND(400, "User Not Found"),
+    INVALID_USERNAME_OR_PASSWORD(401, "Invalid Username or Password"),
+    ACCOUNT_LOCKED(403, "Account Locked"),
 
     PRODUCT_NOT_FOUND(404, "Product Not Found"),
     PRODUCT_ALREADY_EXISTS(409, "Product Already Exists"),
@@ -17,14 +19,23 @@ public enum ErrorCode {
 
     CATEGORY_NOT_FOUND(404, "Category Not Found"),
     INVALID_CATEGORY(400, "Invalid Category"),
-    ;
+
+    INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
+    BAD_REQUEST(400, "Bad Request"),
+    RESOURCE_NOT_FOUND(404, "Resource Not Found"),
+    DATABASE_ERROR(500, "Database Error"),
+
+    UNAUTHORIZED_ACCESS(403, "Unauthorized Access"),
+    UNEXPECTED_ERROR(500, "Unexpected Error");
+
     private int code;
     private String message;
 
-     ErrorCode(int code ,String message){
+    ErrorCode(int code, String message) {
         this.code = code;
         this.message = message;
     }
+
     public int getCode() {
         return code;
     }

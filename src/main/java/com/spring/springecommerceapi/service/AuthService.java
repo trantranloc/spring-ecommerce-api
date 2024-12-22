@@ -66,9 +66,9 @@ public class AuthService {
                 jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
                 return jwsObject.serialize();
             } catch (JOSEException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Lỗi khi ký JWT: " + e.getMessage(), e);
             }
-    }
+        }
     private String buildScope(User user){
         StringJoiner stringJoiner = new StringJoiner(" ");
         if (!CollectionUtils.isEmpty(user.getRoles())){

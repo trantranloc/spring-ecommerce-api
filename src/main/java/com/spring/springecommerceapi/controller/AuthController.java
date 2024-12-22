@@ -12,6 +12,7 @@ import com.spring.springecommerceapi.service.AuthService;
 
 import java.text.ParseException;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,10 +28,16 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiRequest<AuthResponse>> login(@RequestBody AuthRequest authRequest) throws KeyLengthException {
-        var result =  authService.authenticate(authRequest);
+    public ResponseEntity<ApiRequest<AuthResponse>> login(@RequestBody AuthRequest authRequest) {
+        try {
+            var result = authService.authenticate(authRequest);
             return createApiResponse(ErrorCode.SUCCESS, result);
+        } catch (Exception e) {
+            return createApiResponse(ErrorCode.INVALID_USERNAME_OR_PASSWORD, null);
+        }
     }
+
+
     @PostMapping("/introspect")
     public ResponseEntity<ApiRequest<IntrospectResponse>> introspect(@RequestBody IntrospectRequest intropectRequest) throws JOSEException,ParseException {
         var result =  authService.introspect(intropectRequest);
