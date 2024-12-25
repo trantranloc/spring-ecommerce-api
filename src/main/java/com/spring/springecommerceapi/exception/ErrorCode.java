@@ -8,11 +8,14 @@ public enum ErrorCode {
     CREATE_SUCCESS(201, "Create Success"),
     DELETE_SUCCESS(200, "Delete Success"),
     UPDATE_SUCCESS(200, "Update Success"),
-
+                
+    INVALID_INPUT(400, "Invalid Email or Password"),
+    EMAIL_NOT_FOUND(400,"Email Not Found"),
     USER_NOT_FOUND(400, "User Not Found"),
     INVALID_USERNAME_OR_PASSWORD(401, "Invalid Username or Password"),
+    INVALID_EMAIL_OR_PASSWORD(401, "Invalid Email or Password"),
     ACCOUNT_LOCKED(403, "Account Locked"),
-
+USER_ALREADY_EXISTS(409, "USER Already Exists"),
     PRODUCT_NOT_FOUND(404, "Product Not Found"),
     PRODUCT_ALREADY_EXISTS(409, "Product Already Exists"),
     PRODUCT_ALREADY_DELETED(409, "Product Already Deleted"),

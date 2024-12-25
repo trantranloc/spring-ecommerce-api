@@ -1,8 +1,6 @@
 package com.spring.springecommerceapi.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
