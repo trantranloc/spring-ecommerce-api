@@ -20,8 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.StringJoiner;
 
@@ -34,12 +32,16 @@ public class AuthService {
     @NonFinal
     public   static final String SIGNER_KEY="n47X3QZLGE+YF2BNbxdNnTwLk5y5G/ByOvPgOL6l59MoRsY2gqYau5ItAfpS2vJk";
 
-    public AuthResponse authenticate(AuthRequest response) throws KeyLengthException {
-        User user = userRepository.findByUsername(response.getUsername())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+    public AuthResponse authenticate(AuthRequest request) throws KeyLengthException {
+        if (request.getEmail() == null || request.getEmail().isEmpty() ||
+                request.getPassword() == null || request.getPassword().isEmpty()) {
+            throw new AppException(ErrorCode.INVALID_INPUT);
+        }
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_NOT_FOUND));
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        var authenticated = passwordEncoder.matches(response.getPassword(), user.getPassword());
+        var authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if (!authenticated) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
@@ -52,7 +54,7 @@ public class AuthService {
         private String generateToken(User user) throws KeyLengthException {
             JWSHeader jwsHeader =new JWSHeader(JWSAlgorithm.HS512);
             JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                    .subject(user.getUsername())
+                    .subject(user.getEmail())
                     .claim("scope", buildScope(user))
                     .issueTime(new Date())
                     .expirationTime(new Date(System.currentTimeMillis() + 3600000))

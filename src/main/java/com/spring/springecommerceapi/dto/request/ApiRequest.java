@@ -1,7 +1,6 @@
 package com.spring.springecommerceapi.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.spring.springecommerceapi.exception.ErrorCode;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiRequest<T> {
@@ -9,7 +8,7 @@ public class ApiRequest<T> {
     private String message;
     private T result;
 
-    public ApiRequest(ErrorCode invalidUsernameOrPassword, String message, Object result) {
+    public ApiRequest() {
     }
 
     public ApiRequest(int code, String message, T result) {

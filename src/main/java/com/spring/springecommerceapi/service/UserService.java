@@ -33,7 +33,9 @@ public class UserService {
     }
 
     public User createUser(User user) {
-
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
+        }
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -53,8 +55,14 @@ public class UserService {
     public User updateUser(User user) {
         return userRepository.save(user);
     }
+
     public void deleteUser(String id) {
-        User user = userRepository.findById(id).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_FOUND));
         userRepository.deleteById(id);
+    }
+
+    public User getFindByUserName(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+            () -> new AppException(ErrorCode.USER_NOT_FOUND)
+        );
     }
 }
