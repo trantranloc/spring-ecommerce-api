@@ -6,6 +6,7 @@ import com.spring.springecommerceapi.model.Role;
 import com.spring.springecommerceapi.model.User;
 import com.spring.springecommerceapi.repository.RoleRepository;
 import com.spring.springecommerceapi.repository.UserRepository;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,9 @@ public class UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
     public User getUserById(String id) {
-        return userRepository.findById(id).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_FOUND));
+        return userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
 
     public User createUser(User user) {
@@ -52,6 +54,7 @@ public class UserService {
         }
         return userRepository.save(user);
     }
+
     public User updateUser(User user) {
         return userRepository.save(user);
     }
@@ -62,7 +65,12 @@ public class UserService {
 
     public User getFindByUserName(String email) {
         return userRepository.findByEmail(email).orElseThrow(
-            () -> new AppException(ErrorCode.USER_NOT_FOUND)
-        );
+                () -> new AppException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_FOUND));
+
     }
 }

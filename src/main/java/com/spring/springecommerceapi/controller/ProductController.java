@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
 @RestController
 @RequestMapping("/api/v1/products")
 public class ProductController extends BaseController {
@@ -91,4 +92,17 @@ public class ProductController extends BaseController {
         List<Product> products = productService.getProductByTitle(title);
         return createApiResponse(ErrorCode.SUCCESS, products);
     }
+    @GetMapping("/filter")
+public ResponseEntity<List<Product>> filteredProducts(
+    @RequestParam(required = false) String name,
+    @RequestParam(required = false) String category,
+    @RequestParam(required = false) Double minPrice,
+    @RequestParam(required = false) Double maxPrice
+) {
+    // Giả định gọi service để lọc sản phẩm
+    List<Product> filteredProducts = productService.filteredProducts(name, category, minPrice, maxPrice);
+    return ResponseEntity.ok(filteredProducts);
+}
+
+    
 }

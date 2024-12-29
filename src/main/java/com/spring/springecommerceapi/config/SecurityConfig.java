@@ -21,7 +21,7 @@ import javax.crypto.spec.SecretKeySpec;
 @EnableWebSecurity
 public class SecurityConfig {
     protected static final String SIGNER_KEY = "n47X3QZLGE+YF2BNbxdNnTwLk5y5G/ByOvPgOL6l59MoRsY2gqYau5ItAfpS2vJk";
-    protected String[] PUBLIC = {"/api/v1/auth/**", "/swagger-ui/**", "/v3/api-docs"};
+    protected String[] PUBLIC = { "/api/v1/auth/**", "/swagger-ui/**", "/v3/api-docs" };
 
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -29,18 +29,15 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(
                         registry -> registry
-//                                .requestMatchers(PUBLIC).permitAll()
-//                                .requestMatchers(PUBLIC).hasAuthority("SCOPE_ROLE_ADMIN")
-                                .anyRequest().permitAll()
-                )
+                                // .requestMatchers(PUBLIC).hasAuthority("SCOPE_ROLE_ADMIN")
+                                .anyRequest().permitAll())
                 .oauth2ResourceServer(
-                        auth2 -> auth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()))
-                )
+                        auth2 -> auth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())))
                 .formLogin(
                         form -> form
                                 .loginPage("/login").permitAll()
-                                .successHandler((request, response, authentication) -> response.sendRedirect("/api/v1"))
-                )
+                                .successHandler(
+                                        (request, response, authentication) -> response.sendRedirect("/api/v1")))
                 .logout(LogoutConfigurer::permitAll);
 
         return http.build();
