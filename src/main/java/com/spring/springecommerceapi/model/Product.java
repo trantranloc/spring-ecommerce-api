@@ -20,7 +20,9 @@ public class Product {
     private Double price;
     private Long quantity;
     @Column(updatable = false)
+    @JsonIgnore
     private LocalDateTime createdAt;
+    @JsonIgnore
     private LocalDateTime updateAt;
 
     @ManyToMany(fetch = FetchType.EAGER)

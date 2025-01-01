@@ -1,27 +1,26 @@
 package com.spring.springecommerceapi.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
-public class Cart {
+public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(name = "user_id")
-    private String userId;
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
-    @OneToMany(mappedBy = "cartId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<CartItem> items;
-
+    private int quantity;
+    private Double price;
     @Column(updatable = false)
-    @JsonIgnore
     private LocalDateTime createdAt;
-    @JsonIgnore
     private LocalDateTime updateAt;
 
     @PrePersist
@@ -44,20 +43,36 @@ public class Cart {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
-    public List<CartItem> getItems() {
-        return items;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setItems(List<CartItem> items) {
-        this.items = items;
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -75,4 +90,6 @@ public class Cart {
     public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
     }
+
+    
 }

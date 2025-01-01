@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class User {
     @Id
@@ -18,7 +20,9 @@ public class User {
     private String phone;
     private String address;
     @Column(updatable = false)
+    @JsonIgnore
     private LocalDateTime createdAt;
+    @JsonIgnore
     private LocalDateTime updateAt;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",

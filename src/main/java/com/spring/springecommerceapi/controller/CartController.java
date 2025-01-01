@@ -27,12 +27,19 @@ public class CartController extends BaseController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ApiRequest<Cart>> addProductToCart(@RequestParam String userId, @RequestParam String productId , @RequestParam int quantity) {
+    public ResponseEntity<ApiRequest<Cart>> addProductToCart(@RequestParam String userId,
+            @RequestParam String productId, @RequestParam(required = false, defaultValue = "1") int quantity) {
         try {
             Cart updatedCart = cartService.addProductToCart(userId, productId, quantity);
-            return createApiResponse(ErrorCode.CREATE_SUCCESS,updatedCart);
-        }catch (AppException e) {
-            return createApiResponse(ErrorCode.PRODUCT_NOT_FOUND,null);
+            return createApiResponse(ErrorCode.CREATE_SUCCESS, updatedCart);
+        } catch (AppException e) {
+            return createApiResponse(ErrorCode.PRODUCT_NOT_FOUND, null);
         }
     }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<ApiRequest<Cart>> getCartByUserId(@PathVariable String id) {
+        return createApiResponse(ErrorCode.SUCCESS, cartService.getCartByUserId(id));
+    }
+
 }

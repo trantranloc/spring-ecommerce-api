@@ -1,28 +1,31 @@
 package com.spring.springecommerceapi.model;
 
-import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import com.spring.springecommerceapi.enums.OrderStatus;
+
+import jakarta.persistence.*;
 
 @Entity
-public class Cart {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(name = "user_id")
-    private String userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @OneToMany(mappedBy = "cartId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<CartItem> items;
+    private Double totalPrice;
+    private OrderStatus status;
 
     @Column(updatable = false)
-    @JsonIgnore
     private LocalDateTime createdAt;
-    @JsonIgnore
     private LocalDateTime updateAt;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems;
 
     @PrePersist
     public void prePersist() {
@@ -44,20 +47,28 @@ public class Cart {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public List<CartItem> getItems() {
-        return items;
+    public Double getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setItems(List<CartItem> items) {
-        this.items = items;
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -75,4 +86,14 @@ public class Cart {
     public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
     }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+
 }

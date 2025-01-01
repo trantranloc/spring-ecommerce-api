@@ -7,13 +7,16 @@ import com.spring.springecommerceapi.dto.request.IntrospectRequest;
 import com.spring.springecommerceapi.dto.response.AuthResponse;
 import com.spring.springecommerceapi.dto.response.IntrospectResponse;
 import com.spring.springecommerceapi.exception.ErrorCode;
-import com.spring.springecommerceapi.model.User;
 import com.spring.springecommerceapi.service.AuthService;
 import com.spring.springecommerceapi.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.text.ParseException;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,12 +24,10 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController extends BaseController {
 
     private final AuthService authService;
-    private final UserService userService;
 
-    public AuthController(AuthService authService,UserService userService) {
+    public AuthController(AuthService authService, UserService userService) {
         super();
         this.authService = authService;
-        this.userService = userService;
     }
 
     @PostMapping("/login")
@@ -39,6 +40,14 @@ public class AuthController extends BaseController {
         }
     }
 
+    @PostMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        // Hủy session người dùng
+        request.getSession().invalidate();
+        SecurityContextHolder.clearContext();
+        return "Logged out successfully";
+    }
+
     @PostMapping("/introspect")
     public ResponseEntity<ApiRequest<IntrospectResponse>> introspect(@RequestBody IntrospectRequest intropectRequest)
             throws JOSEException, ParseException {
@@ -48,8 +57,7 @@ public class AuthController extends BaseController {
 
     @PostMapping("/reset-password")
     public ResponseEntity<ApiRequest<AuthResponse>> resetPassword(@RequestBody AuthRequest authRequest) {
-        User user = userService.getFindByUserName(authRequest.getEmail());
-
         return createApiResponse(ErrorCode.SUCCESS, null);
     }
+    
 }
