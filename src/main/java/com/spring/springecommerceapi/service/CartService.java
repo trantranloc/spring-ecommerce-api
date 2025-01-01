@@ -8,6 +8,9 @@ import com.spring.springecommerceapi.model.Product;
 import com.spring.springecommerceapi.repository.CartItemRepository;
 import com.spring.springecommerceapi.repository.CartRepository;
 import com.spring.springecommerceapi.repository.ProductRepository;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,32 +36,81 @@ public class CartService {
         Cart cart = cartRepository.findByUserId(userId);
         if (cart == null) {
             Cart newCart = new Cart();
-            newCart.setUserId(userId);
+            newCart.setUser(userId);
             cart = cartRepository.save(newCart);
         }
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
-        CartItem existingCart = cartItemRepository.findByCartIdAndProductId(cart, product);
+        CartItem existingCart = cartItemRepository.findByCartAndProduct(cart, product);
 
         if (existingCart != null) {
             existingCart.setQuantity(existingCart.getQuantity() + quantity);
             cartItemRepository.save(existingCart);
         } else {
             CartItem newCartItem = new CartItem();
-            newCartItem.setCartId(cart);
-            newCartItem.setProductId(product);
+            newCartItem.setCart(cart);
+            newCartItem.setProduct(product);
             newCartItem.setQuantity(quantity);
             cartItemRepository.save(newCartItem);
         }
         return cart;
     }
 
-    public void removeCart(Cart cart) {
-        cartRepository.delete(cart);
+    public Cart removeProductFromCart(String userId, String cartItemId) {
+        // Lấy giỏ hàng của người dùng
+        Cart cart = cartRepository.findByUserId(userId);
+        if (cart == null) {
+            throw new AppException(ErrorCode.CART_NOT_FOUND);
+        }
+        // Xóa cartItem
+        cartItemRepository.deleteById(cartItemId);
+
+        return cart;
+    }
+    @Transactional
+    public Cart incrementProductQuantity(String userId, String productId) {
+        Cart cart = cartRepository.findByUserId(userId);
+        if (cart == null) {
+            throw new AppException(ErrorCode.CART_NOT_FOUND);
+        }
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        CartItem cartItem = cartItemRepository.findByCartAndProduct(cart, product);
+        if (cartItem == null) {
+            throw new AppException(ErrorCode.ITEM_NOT_FOUND);
+        }
+
+        cartItem.setQuantity(cartItem.getQuantity() + 1);
+        cartItemRepository.save(cartItem);
+        return cart;
     }
 
-    public Cart getCart(Cart cart) {
-        return cartRepository.getReferenceById(cart.getId());
+    @Transactional
+    public Cart decrementProductQuantity(String userId, String productId) {
+        Cart cart = cartRepository.findByUserId(userId);
+        if (cart == null) {
+            throw new AppException(ErrorCode.CART_NOT_FOUND);
+        }
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        CartItem cartItem = cartItemRepository.findByCartAndProduct(cart, product);
+        if (cartItem == null) {
+            throw new AppException(ErrorCode.ITEM_NOT_FOUND);
+        }
+
+        if (cartItem.getQuantity() <= 1) {
+            // If quantity would become 0, remove the item entirely
+            cartItemRepository.delete(cartItem);
+        } else {
+            cartItem.setQuantity(cartItem.getQuantity() - 1);
+            cartItemRepository.save(cartItem);
+        }
+
+        return cart;
     }
 
     public Cart getCartByUserId(String id) {

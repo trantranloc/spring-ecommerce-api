@@ -3,6 +3,7 @@ package com.spring.springecommerceapi.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -15,8 +16,8 @@ public class Cart {
     @Column(name = "user_id")
     private String userId;
 
-    @OneToMany(mappedBy = "cartId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<CartItem> items;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<CartItem> items = new ArrayList<>();
 
     @Column(updatable = false)
     @JsonIgnore
@@ -44,11 +45,11 @@ public class Cart {
         this.id = id;
     }
 
-    public String getUserId() {
+    public String getUser() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUser(String userId) {
         this.userId = userId;
     }
 
