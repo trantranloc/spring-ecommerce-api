@@ -73,4 +73,10 @@ public class UserService {
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
 
     }
+    
+    public User getUserByAuthId(String authId) {
+        // Giả sử bạn có một trường authId trong bảng user để nhận diện người dùng
+        return userRepository.findById(authId)
+                .orElseThrow(() -> new RuntimeException("User not found with authId: " + authId));
+    }
 }

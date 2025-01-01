@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Cart {
@@ -18,7 +19,9 @@ public class Cart {
     private List<CartItem> items;
 
     @Column(updatable = false)
+    @JsonIgnore
     private LocalDateTime createdAt;
+    @JsonIgnore
     private LocalDateTime updateAt;
 
     @PrePersist

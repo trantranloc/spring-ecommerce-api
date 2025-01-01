@@ -93,4 +93,13 @@ public class AuthService {
                 .build();
     }
 
+    // Phương thức để giải mã token và lấy thông tin người dùng
+    public User getUserFromToken(String token) throws ParseException, JOSEException {
+        SignedJWT signedJWT = SignedJWT.parse(token);
+        JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
+        String email = claims.getSubject(); // Lấy email từ claim
+
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+    }
 } 

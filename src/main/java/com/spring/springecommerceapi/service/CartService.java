@@ -18,30 +18,32 @@ public class CartService {
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
 
-    public CartService(CartRepository cartRepository, ProductRepository productRepository, CartItemRepository cartItemRepository) {
+    public CartService(CartRepository cartRepository, ProductRepository productRepository,
+            CartItemRepository cartItemRepository) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
         this.cartItemRepository = cartItemRepository;
     }
 
-    public List<Cart> getAllCarts(){
+    public List<Cart> getAllCarts() {
         return cartRepository.findAll();
     }
 
-    public Cart addProductToCart(String userId, String productId, int quantity) {
-
+    public Cart addProductToCart(String userId, String productId, Integer quantity) {
         Cart cart = cartRepository.findByUserId(userId);
         if (cart == null) {
             Cart newCart = new Cart();
             newCart.setUserId(userId);
             cart = cartRepository.save(newCart);
         }
-        Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
-        CartItem existingCart = cartItemRepository.findByCartIdAndProductId(cart ,product);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        CartItem existingCart = cartItemRepository.findByCartIdAndProductId(cart, product);
+
         if (existingCart != null) {
             existingCart.setQuantity(existingCart.getQuantity() + quantity);
             cartItemRepository.save(existingCart);
-        }else{
+        } else {
             CartItem newCartItem = new CartItem();
             newCartItem.setCartId(cart);
             newCartItem.setProductId(product);
@@ -57,5 +59,9 @@ public class CartService {
 
     public Cart getCart(Cart cart) {
         return cartRepository.getReferenceById(cart.getId());
+    }
+
+    public Cart getCartByUserId(String id) {
+        return cartRepository.findByUserId(id);
     }
 }

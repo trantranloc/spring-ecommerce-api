@@ -2,9 +2,11 @@ package com.spring.springecommerceapi.controller;
 
 import com.spring.springecommerceapi.exception.ErrorCode;
 import com.spring.springecommerceapi.model.User;
+import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.spring.springecommerceapi.dto.request.ApiRequest;
+import com.spring.springecommerceapi.service.AuthService;
 import com.spring.springecommerceapi.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -21,10 +24,12 @@ public class UserController extends BaseController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
+    private final AuthService authService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthService authService) {
         super();
         this.userService = userService;
+        this.authService = authService;
     }
 
     @GetMapping
@@ -84,5 +89,11 @@ public class UserController extends BaseController {
         } catch (Exception ex) {
             return ResponseEntity.status(500).body("An error occurred: " + ex.getMessage());
         }
+    }
+
+    @GetMapping("/profile")
+    public User getUserProfile(@RequestHeader("Authorization") String token) throws ParseException, JOSEException {
+        // Lấy thông tin người dùng từ token
+        return authService.getUserFromToken(token.substring(7));
     }
 }

@@ -19,7 +19,9 @@ public class CartItem {
     private Cart cartId;
 
     @Column(updatable = false)
+    @JsonIgnore
     private LocalDateTime createdAt;
+    @JsonIgnore
     private LocalDateTime updateAt;
 
     @PrePersist
