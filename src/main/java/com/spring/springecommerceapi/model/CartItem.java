@@ -13,10 +13,10 @@ public class CartItem {
     private int quantity;
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product productId;
+    private Product product;
     @ManyToOne
     @JoinColumn(name = "cart_id")
-    private Cart cartId;
+    private Cart cart;
 
     @Column(updatable = false)
     @JsonIgnore
@@ -52,21 +52,21 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public Product getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductId(Product productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     @JsonIgnore
-    public Cart getCartId() {
-        return cartId;
+    public Cart getCart() {
+        return cart;
     }
 
-    public void setCartId(Cart cartId) {
-        this.cartId = cartId;
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -83,5 +83,17 @@ public class CartItem {
 
     public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
+    }
+
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "id='" + id + '\'' +
+                ", quantity=" + quantity +
+                ", product=" + product +
+                ", cart=" + cart +
+                ", createdAt=" + createdAt +
+                ", updateAt=" + updateAt +
+                '}';
     }
 }

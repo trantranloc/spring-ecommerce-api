@@ -42,4 +42,42 @@ public class CartController extends BaseController {
         return createApiResponse(ErrorCode.SUCCESS, cartService.getCartByUserId(id));
     }
 
+    @DeleteMapping("/remove")
+    public ResponseEntity<ApiRequest<Cart>> removeProductFromCart(
+            @RequestParam String userId,
+            @RequestParam String cartItemId) {
+        System.out.println("Removing item with cartItemId: " + cartItemId + " for userId: " + userId);
+        try {
+            Cart updatedCart = cartService.removeProductFromCart(userId, cartItemId);
+            return createApiResponse(ErrorCode.SUCCESS, updatedCart);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return createApiResponse(ErrorCode.ITEM_NOT_FOUND, null);
+        }
+    }
+
+    @PutMapping("/increment")
+    public ResponseEntity<ApiRequest<Cart>> incrementProductQuantity(
+            @RequestParam String userId,
+            @RequestParam String productId) {
+        try {
+            Cart updatedCart = cartService.incrementProductQuantity(userId, productId);
+            return createApiResponse(ErrorCode.UPDATE_SUCCESS, updatedCart);
+        } catch (AppException e) {
+            return createApiResponse(e.getErrorCode(), null);
+        }
+    }
+
+    @PutMapping("/decrement")
+    public ResponseEntity<ApiRequest<Cart>> decrementProductQuantity(
+            @RequestParam String userId,
+            @RequestParam String productId) {
+        try {
+            Cart updatedCart = cartService.decrementProductQuantity(userId, productId);
+            return createApiResponse(ErrorCode.UPDATE_SUCCESS, updatedCart);
+        } catch (AppException e) {
+            return createApiResponse(e.getErrorCode(), null);
+        }
+    }
+
 }
