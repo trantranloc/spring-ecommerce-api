@@ -1,5 +1,6 @@
 package com.spring.springecommerceapi.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -21,16 +22,20 @@ public class Product {
     private Long quantity;
     @Column(updatable = false)
     @JsonIgnore
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
+
     @JsonIgnore
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateAt;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "product_category",joinColumns = @JoinColumn(name = "product_id"),
-    inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @JsonIgnore
     private Set<Category> categories = new HashSet<>();
 
-    public Product(String id, String image, String title, String description, Double price, Long quantity, LocalDateTime createdAt, LocalDateTime updateAt, Set<Category> categories) {
+    public Product(String id, String image, String title, String description, Double price, Long quantity,
+            LocalDateTime createdAt, LocalDateTime updateAt, Set<Category> categories) {
         this.id = id;
         this.image = image;
         this.title = title;
@@ -109,13 +114,15 @@ public class Product {
     public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
     }
-    @JsonIgnore
+
     public Set<Category> getCategories() {
         return categories;
     }
+
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
     }
+
     public List<String> getCategoriesIds() {
         if (this.categories == null) {
             return new ArrayList<>();
@@ -124,6 +131,7 @@ public class Product {
                 .map(Category::getId)
                 .collect(Collectors.toList());
     }
+
     public void setCategoriesIds(List<String> categoriesIds) {
         if (categoriesIds == null || categoriesIds.isEmpty()) {
             this.categories = new HashSet<>();
@@ -137,6 +145,7 @@ public class Product {
         }
         this.categories = categories;
     }
+
     @PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();

@@ -46,13 +46,14 @@ public class CartController extends BaseController {
     public ResponseEntity<ApiRequest<Cart>> removeProductFromCart(
             @RequestParam String userId,
             @RequestParam String cartItemId) {
-        System.out.println("Removing item with cartItemId: " + cartItemId + " for userId: " + userId);
         try {
             Cart updatedCart = cartService.removeProductFromCart(userId, cartItemId);
-            return createApiResponse(ErrorCode.SUCCESS, updatedCart);
+            return createApiResponse(ErrorCode.DELETE_SUCCESS, updatedCart);
+        } catch (AppException e) {
+            return createApiResponse(e.getErrorCode(), null);
         } catch (Exception e) {
             e.printStackTrace();
-            return createApiResponse(ErrorCode.ITEM_NOT_FOUND, null);
+            return createApiResponse(ErrorCode.INTERNAL_SERVER_ERROR, null);
         }
     }
 
