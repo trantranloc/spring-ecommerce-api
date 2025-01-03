@@ -56,16 +56,31 @@ public class CartService {
         return cart;
     }
 
+    @Transactional
     public Cart removeProductFromCart(String userId, String cartItemId) {
-        // Lấy giỏ hàng của người dùng
+        // 1. Tìm cart của user
         Cart cart = cartRepository.findByUserId(userId);
         if (cart == null) {
             throw new AppException(ErrorCode.CART_NOT_FOUND);
         }
-        // Xóa cartItem
-        cartItemRepository.deleteById(cartItemId);
 
-        return cart;
+        // 2. Tìm cartItem và verify ownership
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND));
+
+        // 3. Kiểm tra xem cartItem có thuộc về cart của user không
+        if (!cartItem.getCart().getId().equals(cart.getId())) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+
+        // 4. Xóa cartItem khỏi danh sách items của cart
+        cart.getItems().remove(cartItem);
+
+        // 5. Xóa cartItem
+        cartItemRepository.delete(cartItem);
+
+        // 6. Lưu cart để cập nhật thay đổi
+        return cartRepository.save(cart);
     }
     @Transactional
     public Cart incrementProductQuantity(String userId, String productId) {

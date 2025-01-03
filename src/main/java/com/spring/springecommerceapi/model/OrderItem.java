@@ -2,6 +2,9 @@ package com.spring.springecommerceapi.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -19,9 +22,13 @@ public class OrderItem {
 
     private int quantity;
     private Double price;
-    @Column(updatable = false)
+    @JsonIgnore
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
-    private LocalDateTime updateAt;
+
+    @JsonIgnore
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updateAt;;
 
     @PrePersist
     public void prePersist() {
@@ -91,5 +98,4 @@ public class OrderItem {
         this.updateAt = updateAt;
     }
 
-    
 }

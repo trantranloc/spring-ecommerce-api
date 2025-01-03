@@ -27,7 +27,7 @@ public enum ErrorCode {
     BAD_REQUEST(400, "Bad Request"),
     RESOURCE_NOT_FOUND(404, "Resource Not Found"),
     DATABASE_ERROR(500, "Database Error"),
-
+CART_ITEM_NOT_FOUND(400,"Cart Item Not Found"),
     UNAUTHORIZED_ACCESS(403, "Unauthorized Access"),
     UNEXPECTED_ERROR(500, "Unexpected Error");
 

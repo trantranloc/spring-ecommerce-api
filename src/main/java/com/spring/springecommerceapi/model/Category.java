@@ -1,5 +1,6 @@
 package com.spring.springecommerceapi.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -12,10 +13,16 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String name;
-    @Column(updatable = false)
+    @JsonIgnore
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
+
+    @JsonIgnore
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateAt;
+
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "categories")
+    @JsonIgnore
     private Set<Product> products;
 
     public String getId() {
@@ -49,7 +56,7 @@ public class Category {
     public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
     }
-    @JsonIgnore
+
     public Set<Product> getProducts() {
         return products;
     }

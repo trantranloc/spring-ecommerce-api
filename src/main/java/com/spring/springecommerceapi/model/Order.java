@@ -3,6 +3,8 @@ package com.spring.springecommerceapi.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spring.springecommerceapi.enums.OrderStatus;
 
 import jakarta.persistence.*;
@@ -20,8 +22,12 @@ public class Order {
     private Double totalPrice;
     private OrderStatus status;
 
-    @Column(updatable = false)
+    @JsonIgnore
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
+
+    @JsonIgnore
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateAt;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
@@ -94,6 +100,5 @@ public class Order {
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
     }
-
 
 }
