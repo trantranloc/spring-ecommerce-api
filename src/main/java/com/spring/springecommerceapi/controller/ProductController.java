@@ -10,10 +10,10 @@ import com.spring.springecommerceapi.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -37,24 +37,46 @@ public class ProductController extends BaseController {
         Product product = productService.getProductById(id);
         return createApiResponse(ErrorCode.SUCCESS, product);
     }
+
     @PostMapping
-    public ResponseEntity<ApiRequest<Product>> addProduct(@RequestBody Product product) {
-        if (product.getCategoriesIds() == null || product.getCategoriesIds().isEmpty()) {
-            throw new AppException(ErrorCode.INVALID_CATEGORY);
+    public ResponseEntity<ApiRequest<List<Product>>> addProducts(@RequestBody List<Product> products) {
+        if (products == null || products.isEmpty()) {
+            throw new AppException(ErrorCode.PRODUCT_ALREADY_DELETED);
         }
-        Set<Category> categories = new HashSet<>();
 
-        for (String categoryId : product.getCategoriesIds()) {
-            Category category = categoryService.getCategoryById(categoryId);
+        List<Product> savedProducts = new ArrayList<>();
 
-            if (category == null) {
-                throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
+        for (Product product : products) {
+            // Kiểm tra nếu sản phẩm không có danh mục
+            if (product.getCategoriesIds() == null || product.getCategoriesIds().isEmpty()) {
+                throw new AppException(ErrorCode.INVALID_CATEGORY);
             }
-            categories.add(category);
+
+            Set<Category> categories = new HashSet<>();
+
+            // Duyệt qua từng categoryId và thêm vào danh sách categories
+            for (String categoryId : product.getCategoriesIds()) {
+                Category category = categoryService.getCategoryById(categoryId);
+
+                if (category == null) {
+                    // Tạo mới danh mục nếu không tìm thấy
+                    category = new Category();
+                    category.setId(categoryId); // Gán ID mới
+                    categoryService.saveCategory(category); // Lưu vào cơ sở dữ liệu
+                }
+
+                categories.add(category);
+            }
+
+            // Gán danh mục vào sản phẩm
+            product.setCategories(categories);
+
+            // Lưu sản phẩm vào cơ sở dữ liệu
+            Product savedProduct = productService.saveProduct(product);
+            savedProducts.add(savedProduct);
         }
-        product.setCategories(categories);
-        Product savedProduct = productService.saveProduct(product);
-        return createApiResponse(ErrorCode.CREATE_SUCCESS, savedProduct);
+
+        return createApiResponse(ErrorCode.CREATE_SUCCESS, savedProducts);
     }
 
     @DeleteMapping("/{id}")
@@ -62,8 +84,9 @@ public class ProductController extends BaseController {
         productService.deleteProduct(id);
         return createApiResponse(ErrorCode.CREATE_SUCCESS, null);
     }
+
     @PutMapping("/update/{id}")
-    public ResponseEntity<ApiRequest<Void>> updateProduct(@PathVariable String id,@RequestBody Product product) {
+    public ResponseEntity<ApiRequest<Void>> updateProduct(@PathVariable String id, @RequestBody Product product) {
         Product productUpdate = productService.getProductById(id);
         if (product.getCategoriesIds() == null || product.getCategoriesIds().isEmpty()) {
             product.setCategoriesIds(productUpdate.getCategoriesIds());
@@ -84,7 +107,7 @@ public class ProductController extends BaseController {
             productUpdate.setQuantity(product.getQuantity());
         }
         productService.updateProduct(productUpdate);
-        return createApiResponse(ErrorCode.UPDATE_SUCCESS,null);
+        return createApiResponse(ErrorCode.UPDATE_SUCCESS, null);
     }
 
     @GetMapping("/search")
@@ -92,17 +115,16 @@ public class ProductController extends BaseController {
         List<Product> products = productService.getProductByTitle(title);
         return createApiResponse(ErrorCode.SUCCESS, products);
     }
-    @GetMapping("/filter")
-public ResponseEntity<List<Product>> filteredProducts(
-    @RequestParam(required = false) String name,
-    @RequestParam(required = false) String category,
-    @RequestParam(required = false) Double minPrice,
-    @RequestParam(required = false) Double maxPrice
-) {
-    // Giả định gọi service để lọc sản phẩm
-    List<Product> filteredProducts = productService.filteredProducts(name, category, minPrice, maxPrice);
-    return ResponseEntity.ok(filteredProducts);
-}
 
-    
+    @GetMapping("/filter")
+    public ResponseEntity<List<Product>> filteredProducts(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice) {
+        // Giả định gọi service để lọc sản phẩm
+        List<Product> filteredProducts = productService.filteredProducts(name, category, minPrice, maxPrice);
+        return ResponseEntity.ok(filteredProducts);
+    }
+
 }
