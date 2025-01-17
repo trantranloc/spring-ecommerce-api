@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import com.spring.springecommerceapi.request.ApiRequest;
+import com.spring.springecommerceapi.dto.request.ApiRequest;
 
 import java.util.Objects;
 
@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = RuntimeException.class)
     public ResponseEntity<ApiRequest<Void>> runtimeException(RuntimeException e) {
         ApiRequest<Void> apiRequest = new ApiRequest<>();
-        apiRequest.SetCode(404);
+        apiRequest.setCode(404);
         apiRequest.setMessage(e.getMessage());
         return ResponseEntity.badRequest().body(apiRequest);
     }
@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiRequest<Void>> appException(AppException e) {
         ApiRequest<Void> apiRequest = new ApiRequest<>();
         ErrorCode errorCode = e.getErrorCode();
-        apiRequest.SetCode(errorCode.getCode());
+        apiRequest.setCode(errorCode.getCode());
         apiRequest.setMessage(errorCode.getMessage());
         return ResponseEntity.badRequest().body(apiRequest);
     }
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
         ApiRequest<Void> apiRequest = new ApiRequest<>();
         String key = Objects.requireNonNull(e.getFieldError()).getDefaultMessage();
         ErrorCode errorCode = ErrorCode.valueOf(key);
-        apiRequest.SetCode(errorCode.getCode());
+        apiRequest.setCode(errorCode.getCode());
         apiRequest.setMessage(errorCode.getMessage());
         return ResponseEntity.badRequest().body(apiRequest);
     }

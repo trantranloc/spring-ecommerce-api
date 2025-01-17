@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
@@ -30,13 +29,21 @@ public class ProductService {
     }
 
     public void deleteProduct(String id) {
-        if(!productRepository.existsById(id)) {
-           throw new AppException(ErrorCode.PRODUCT_NOT_FOUND);
+        if (!productRepository.existsById(id)) {
+            throw new AppException(ErrorCode.PRODUCT_NOT_FOUND);
         }
         productRepository.deleteById(id);
     }
 
     public void updateProduct(Product product) {
+        productRepository.save(product);
+    }
 
+    public List<Product> getProductByTitle(String name) {
+        return productRepository.findByNameContainingIgnoreCase(name);
+    }
+
+    public List<Product> filteredProducts(String name, String category, Double minPrice, Double maxPrice) {
+        return null;
     }
 }
