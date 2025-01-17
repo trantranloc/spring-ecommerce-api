@@ -39,8 +39,8 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public List<Product> getProductByTitle(String title) {
-        return productRepository.findByTitleContainingIgnoreCase(title);
+    public List<Product> getProductByTitle(String name) {
+        return productRepository.findByNameContainingIgnoreCase(name);
     }
 
     public List<Product> filteredProducts(String name, String category, Double minPrice, Double maxPrice) {

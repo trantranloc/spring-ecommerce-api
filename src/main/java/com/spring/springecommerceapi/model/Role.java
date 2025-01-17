@@ -1,5 +1,6 @@
 package com.spring.springecommerceapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -28,7 +29,8 @@ public class Role {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
+    @ManyToMany(mappedBy = "roles",fetch = FetchType.EAGER)
     private Set<User> users = new HashSet<>();
 
     public String getId() {

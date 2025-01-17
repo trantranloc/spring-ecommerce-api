@@ -55,18 +55,18 @@ public class ProductController extends BaseController {
             Set<Category> categories = new HashSet<>();
 
             // Duyệt qua từng categoryId và thêm vào danh sách categories
-            for (String categoryId : product.getCategories()) {
-                Category category = categoryService.getCategoryById(categoryId);
-
-                if (category == null) {
-                    // Tạo mới danh mục nếu không tìm thấy
-                    category = new Category();
-                    category.setId(categoryId); // Gán ID mới
-                    categoryService.saveCategory(category); // Lưu vào cơ sở dữ liệu
-                }
-
-                categories.add(category);
-            }
+//            for (String categoryId : product.getCategories()) {
+//                Category category = categoryService.getCategoryById(categoryId);
+//
+//                if (category == null) {
+//                    // Tạo mới danh mục nếu không tìm thấy
+//                    category = new Category();
+//                    category.setId(categoryId); // Gán ID mới
+//                    categoryService.saveCategory(category); // Lưu vào cơ sở dữ liệu
+//                }
+//
+//                categories.add(category);
+//            }
 
             // Gán danh mục vào sản phẩm
             product.setCategories(categories);
