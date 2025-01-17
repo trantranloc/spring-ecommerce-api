@@ -1,9 +1,11 @@
 package com.spring.springecommerceapi.enums;
 
 public enum OrderStatus {
-    PENDDING,
+    PENDING,
+    CONFIRMED,
+    PROCESSING,
     SHIPPED,
     DELIVERED,
-    CANCELED
-
+    CANCELLED,
+    REFUNDED
 }
