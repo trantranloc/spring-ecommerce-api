@@ -48,25 +48,25 @@ public class ProductController extends BaseController {
 
         for (Product product : products) {
             // Kiểm tra nếu sản phẩm không có danh mục
-            if (product.getCategoriesIds() == null || product.getCategoriesIds().isEmpty()) {
+            if (product.getCategories() == null || product.getCategories().isEmpty()) {
                 throw new AppException(ErrorCode.INVALID_CATEGORY);
             }
 
             Set<Category> categories = new HashSet<>();
 
             // Duyệt qua từng categoryId và thêm vào danh sách categories
-            for (String categoryId : product.getCategoriesIds()) {
-                Category category = categoryService.getCategoryById(categoryId);
-
-                if (category == null) {
-                    // Tạo mới danh mục nếu không tìm thấy
-                    category = new Category();
-                    category.setId(categoryId); // Gán ID mới
-                    categoryService.saveCategory(category); // Lưu vào cơ sở dữ liệu
-                }
-
-                categories.add(category);
-            }
+//            for (String categoryId : product.getCategories()) {
+//                Category category = categoryService.getCategoryById(categoryId);
+//
+//                if (category == null) {
+//                    // Tạo mới danh mục nếu không tìm thấy
+//                    category = new Category();
+//                    category.setId(categoryId); // Gán ID mới
+//                    categoryService.saveCategory(category); // Lưu vào cơ sở dữ liệu
+//                }
+//
+//                categories.add(category);
+//            }
 
             // Gán danh mục vào sản phẩm
             product.setCategories(categories);
@@ -88,14 +88,14 @@ public class ProductController extends BaseController {
     @PutMapping("/update/{id}")
     public ResponseEntity<ApiRequest<Void>> updateProduct(@PathVariable String id, @RequestBody Product product) {
         Product productUpdate = productService.getProductById(id);
-        if (product.getCategoriesIds() == null || product.getCategoriesIds().isEmpty()) {
-            product.setCategoriesIds(productUpdate.getCategoriesIds());
+        if (product.getCategories() == null || product.getCategories().isEmpty()) {
+            product.setCategories(productUpdate.getCategories());
         }
-        if (product.getImage() != null) {
-            productUpdate.setImage(product.getImage());
+        if (product.getImages() != null) {
+            productUpdate.setImages(product.getImages());
         }
-        if (product.getTitle() != null) {
-            productUpdate.setTitle(product.getTitle());
+        if (product.getName() != null) {
+            productUpdate.setName(product.getName());
         }
         if (product.getDescription() != null) {
             productUpdate.setDescription(product.getDescription());
@@ -103,8 +103,8 @@ public class ProductController extends BaseController {
         if (product.getPrice() != null) {
             productUpdate.setPrice(product.getPrice());
         }
-        if (product.getQuantity() != null) {
-            productUpdate.setQuantity(product.getQuantity());
+        if (product.getSku() != null) {
+            productUpdate.setSku(product.getSku());
         }
         productService.updateProduct(productUpdate);
         return createApiResponse(ErrorCode.UPDATE_SUCCESS, null);

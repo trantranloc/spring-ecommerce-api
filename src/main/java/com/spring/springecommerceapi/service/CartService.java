@@ -5,6 +5,7 @@ import com.spring.springecommerceapi.exception.ErrorCode;
 import com.spring.springecommerceapi.model.Cart;
 import com.spring.springecommerceapi.model.CartItem;
 import com.spring.springecommerceapi.model.Product;
+import com.spring.springecommerceapi.model.User;
 import com.spring.springecommerceapi.repository.CartItemRepository;
 import com.spring.springecommerceapi.repository.CartRepository;
 import com.spring.springecommerceapi.repository.ProductRepository;
@@ -20,12 +21,14 @@ public class CartService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
+    private final UserService userService;
 
-    public CartService(CartRepository cartRepository, ProductRepository productRepository,
+    public CartService(CartRepository cartRepository, ProductRepository productRepository, UserService userService,
             CartItemRepository cartItemRepository) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
         this.cartItemRepository = cartItemRepository;
+        this.userService = userService;
     }
 
     public List<Cart> getAllCarts() {
@@ -34,9 +37,10 @@ public class CartService {
 
     public Cart addProductToCart(String userId, String productId, Integer quantity) {
         Cart cart = cartRepository.findByUserId(userId);
+        User user = userService.getUserById(userId);
         if (cart == null) {
             Cart newCart = new Cart();
-            newCart.setUser(userId);
+            newCart.setUser(user);
             cart = cartRepository.save(newCart);
         }
         Product product = productRepository.findById(productId)
@@ -82,6 +86,7 @@ public class CartService {
         // 6. Lưu cart để cập nhật thay đổi
         return cartRepository.save(cart);
     }
+
     @Transactional
     public Cart incrementProductQuantity(String userId, String productId) {
         Cart cart = cartRepository.findByUserId(userId);

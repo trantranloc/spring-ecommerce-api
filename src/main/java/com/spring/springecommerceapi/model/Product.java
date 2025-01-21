@@ -1,55 +1,60 @@
 package com.spring.springecommerceapi.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private String image;
-    private String title;
+
+    @Column(unique = true, nullable = false)
+    private String sku;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(unique = true, nullable = false)
+    private String slug;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
-    private Double price;
-    private Long quantity;
-    @Column(updatable = false)
-    @JsonIgnore
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createdAt;
 
-    @JsonIgnore
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updateAt;
+    @Column(nullable = false)
+    private BigDecimal price;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
-    @JsonIgnore
+    @Column(nullable = false)
+    private Integer stock;
+
+    private String mainImage;
+
+    @Column(nullable = false)
+    private boolean isActive = true;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImage> images = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name = "product_categories", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
 
-    public Product(String id, String image, String title, String description, Double price, Long quantity,
-            LocalDateTime createdAt, LocalDateTime updateAt, Set<Category> categories) {
-        this.id = id;
-        this.image = image;
-        this.title = title;
-        this.description = description;
-        this.price = price;
-        this.quantity = quantity;
-        this.createdAt = createdAt;
-        this.updateAt = updateAt;
-        this.categories = categories;
-    }
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 
-    public Product() {
-
-    }
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     public String getId() {
         return id;
@@ -59,20 +64,28 @@ public class Product {
         this.id = id;
     }
 
-    public String getImage() {
-        return image;
+    public String getSku() {
+        return sku;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 
     public String getDescription() {
@@ -83,36 +96,44 @@ public class Product {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
-    public Long getQuantity() {
-        return quantity;
+    public Integer getStock() {
+        return stock;
     }
 
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public String getMainImage() {
+        return mainImage;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setMainImage(String mainImage) {
+        this.mainImage = mainImage;
     }
 
-    public LocalDateTime getUpdateAt() {
-        return updateAt;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public void setUpdateAt(LocalDateTime updateAt) {
-        this.updateAt = updateAt;
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public List<ProductImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ProductImage> images) {
+        this.images = images;
     }
 
     public Set<Category> getCategories() {
@@ -123,38 +144,21 @@ public class Product {
         this.categories = categories;
     }
 
-    public List<String> getCategoriesIds() {
-        if (this.categories == null) {
-            return new ArrayList<>();
-        }
-        return this.categories.stream()
-                .map(Category::getId)
-                .collect(Collectors.toList());
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCategoriesIds(List<String> categoriesIds) {
-        if (categoriesIds == null || categoriesIds.isEmpty()) {
-            this.categories = new HashSet<>();
-            return;
-        }
-        Set<Category> categories = new HashSet<>();
-        for (String categoryId : categoriesIds) {
-            Category category = new Category();
-            category.setId(categoryId);
-            categories.add(category);
-        }
-        this.categories = categories;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
-    @PrePersist
-    public void prePersist() {
-        LocalDateTime now = LocalDateTime.now();
-        createdAt = now;
-        updateAt = now;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    @PreUpdate
-    public void preUpdate() {
-        updateAt = LocalDateTime.now();
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
+
+    
 }

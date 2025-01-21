@@ -29,9 +29,9 @@ public class SpringEcommerceApiApplication {
                 adminRole.setName("ROLE_ADMIN");
                 roleRepository.save(adminRole);
             }
-
+            boolean userExists = userRepository.findByEmail("admin@example.com").isPresent();
             // Kiểm tra và tạo admin nếu chưa có
-            if (!userRepository.existsById("admin@example.com")) {
+            if (!userExists) {
                 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
                 String encodedPassword = passwordEncoder.encode("admin");
 
@@ -42,6 +42,8 @@ public class SpringEcommerceApiApplication {
                 admin.setPassword(encodedPassword);  // Mã hóa mật khẩu
                 admin.setRoles(Collections.singleton(adminRole));  // Gán vai trò cho admin
                 userRepository.save(admin);
+            }else {
+                System.out.println("User already exists");
             }
         };
     }
