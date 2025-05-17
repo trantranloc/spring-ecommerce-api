@@ -23,7 +23,6 @@ A robust Spring Boot-based RESTful API for an e-commerce application, providing 
 - **Authentication**: JWT (JSON Web Tokens)
 - **Database**: PostgreSQL/MySQL
 - **Build Tool**: Maven
-- **Logging**: SLF4J
 - **Testing**: JUnit 5, Mockito
 
 ## 📋 Prerequisites
