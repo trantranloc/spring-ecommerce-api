@@ -16,7 +16,7 @@ A robust Spring Boot-based RESTful API for an e-commerce application, providing 
 
 ## 🛠 Technology Stack
 
-- **Language**: Java 17
+- **Language**: Java 21
 - **Framework**: Spring Boot 3.x
 - **ORM**: Spring Data JPA
 - **Security**: Spring Security
